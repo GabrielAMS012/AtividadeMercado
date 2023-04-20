@@ -6,15 +6,30 @@ import java.util.stream.Collectors;
 public class ListaProdutos extends ClearBuffer{
 
     boolean result;
-    int qntdProdAdd = 0;
+    int qntdProdAdd = 0, y;
     String nm, n;
     float x;
     Scanner scanner = new Scanner(System.in);
     List<Produtos> produtos = new ArrayList<>();
 
+    public void mostraListaProd(){
+        for (Produtos produto : produtos) {
+            System.out.println("." + produto.getNome());
+        }
+    }
+    public void criaListaQntd(){
+        String qtd = ("2;1;4;2;7");
+        List<String> qntdProdStr = Arrays.asList(qtd.split(";"));
+        List<Integer> qntdProd = qntdProdStr.stream().map(Integer::new).collect(Collectors.toList());
+
+        for (int i = 0; i < qntdProd.size(); i++) {
+            produtos.get(i + getQntdProdAdd()).setQtd(qntdProd.get(i));
+        }
+    }
+
     public void criaListaNome() {
 
-        String nomeProd = ("SHAMPOO;SODA;ARROZ");
+        String nomeProd = ("SHAMPOO;SODA;ARROZ;FEIJÃO;SABONETE");
 
         List<String> nomes = Arrays.asList(nomeProd.split(";"));
 
@@ -25,10 +40,10 @@ public class ListaProdutos extends ClearBuffer{
     }
     public void criaListaPreco(){
 
-        String precoProd = ("10.95;5.50;12.45");
+        String precoProd = ("10.95;5.50;12.45;8.50;2.48");
 
         List<String> list = Arrays.asList(precoProd.split(";"));
-        List<BigDecimal> precos = new ArrayList<>(list.stream().map(BigDecimal::new).collect(Collectors.toList()));
+        List<BigDecimal> precos = list.stream().map(BigDecimal::new).collect(Collectors.toList());
 
         for (int i = 0; i < precos.size(); i++) {
             produtos.get(i + getQntdProdAdd()).setValor(precos.get(i));
@@ -39,6 +54,7 @@ public class ListaProdutos extends ClearBuffer{
     public void pergunta() {
 
         System.out.println("Sobre qual produto você gostaria de obter as informações?");
+        this.mostraListaProd();
         nm = scanner.nextLine().toUpperCase();
 
     }
@@ -48,8 +64,13 @@ public class ListaProdutos extends ClearBuffer{
         Produtos produto = produtos.stream()
                 .filter(e -> e.getNome().equals(nm))
                 .findFirst().get();
-
-        System.out.println("\n"+ produto.getNome() + " está custando R$ " + produto.getValor() + "\n");
+        if(produto.getQntd() > 0) {
+            System.out.println("\n" + produto.getNome() + " está custando R$ " + produto.getValor() + "\nQuantidade em "
+                    + "estoque: " + produto.getQntd() + "\n");
+        }else{
+            System.out.println("\n" + produto.getNome() + " está custando R$ " + produto.getValor() +
+                    "\nProduto fora de estoque\n");
+        }
 
     }
 
@@ -90,11 +111,23 @@ public class ListaProdutos extends ClearBuffer{
                 System.out.println("\nValor inválido\n");
             }
         }
+
+        while(true){
+            try{
+                System.out.println("\nQual a quantidade no estoque?");
+                y = scanner.nextInt();
+                clearBuffer(scanner);
+                break;
+            }catch(Exception e){
+                clearBuffer(scanner);
+                System.out.println("\nValor inválido\n");
+            }
+        }
     }
 
-    public void adicionaProd(String n, float x){
+    public void adicionaProd(String n, float x, int y){
 
-        produtos.add(new Produtos(n, BigDecimal.valueOf(x).setScale(2, RoundingMode.HALF_EVEN)));
+        produtos.add(new Produtos(n, BigDecimal.valueOf(x).setScale(2, RoundingMode.HALF_EVEN), y));
         setQntdProdAdd(getQntdProdAdd() + 1);
         System.out.println("\nProduto adicionado\n");
     }

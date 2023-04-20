@@ -5,6 +5,7 @@ public class Produtos extends ListaProdutos {
 
     String nome, resposta;
     BigDecimal valor;
+    Integer qntd;
 
 
     public Produtos(String nome) {
@@ -15,19 +16,21 @@ public class Produtos extends ListaProdutos {
     public Produtos() {
     }
 
-    public Produtos(String nome, BigDecimal valor) {
+    public Produtos(String nome, BigDecimal valor, Integer qntd) {
         this.nome = nome;
         this.valor = valor;
+        this.qntd = qntd;
     }
 
     public void criaLista(){
         this.criaListaNome();
         this.criaListaPreco();
+        this.criaListaQntd();
     }
 
     public void cadProd(){
         this.cadastraProd();
-        this.adicionaProd(n,x);
+        this.adicionaProd(n,x,y);
     }
 
     public void consultaProd() {
@@ -79,4 +82,15 @@ public class Produtos extends ListaProdutos {
         this.resposta = resposta;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Integer getQntd() {
+        return qntd;
+    }
+
+    public void setQtd(Integer qntd) {
+        this.qntd = qntd;
+    }
 }
